@@ -17,10 +17,14 @@ armor_options = {
     "Engraving": ["None", "Runes", "Heraldic Crest", "Floral Motif"],
 }
 
+armor_materials = ["Steel", "Bronze", "Leather", "Damascus Steel", "Iron"]
+
 # Store user selections
 user_armor = {}
 for category, choices in armor_options.items():
-    user_armor[category] = st.sidebar.selectbox(category, choices)
+    material = st.sidebar.selectbox(f"{category} Material", armor_materials, key=f"{category}_material")
+    armor_choice = st.sidebar.selectbox(category, choices, key=f"{category}_choice")
+    user_armor[category] = {"Material": material, "Type": armor_choice}
 
 # ========== Toggle Switches ==========
 st.sidebar.subheader("Enable/Disable Components")
@@ -31,21 +35,23 @@ for category in armor_options.keys():
 # ========== Randomization Button ==========
 if st.sidebar.button("🎲 Randomize Armor"):
     for category in armor_options.keys():
-        user_armor[category] = random.choice(armor_options[category])
+        user_armor[category]["Type"] = random.choice(armor_options[category])
+        user_armor[category]["Material"] = random.choice(armor_materials)
 
 # ========== Static Armor Reference Panel ==========
 st.sidebar.subheader("🛡️ Armor Reference")
-st.sidebar.image("static_armor_diagram.png", caption="Armor Layers", use_column_width=True)
+st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_column_width=True)
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
 ai_prompt = "A warrior clad in "
-for category, choice in user_armor.items():
-    if toggle_armor[category] and choice != "None":
-        ai_prompt += f"{choice.lower()} {category.lower()}, "
+
+for category, details in user_armor.items():
+    if toggle_armor[category] and details["Type"] != "None":
+        ai_prompt += f"{details['Material'].lower()} {details['Type'].lower()} {category.lower()}, "
 
 ai_prompt = ai_prompt.rstrip(", ") + "."
-st.write(ai_prompt)
+st.text_area("Copy & Paste AI Prompt:", ai_prompt)
 
 # ========== Save & Load Feature ==========
 st.sidebar.subheader("💾 Save & Load Configurations")
@@ -66,3 +72,4 @@ if load_armor:
 # ========== Final Display ==========
 st.subheader("🛡️ Final Armor Configuration")
 st.json(user_armor)
+
