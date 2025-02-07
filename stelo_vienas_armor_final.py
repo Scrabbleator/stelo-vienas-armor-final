@@ -15,13 +15,14 @@ def load_configuration():
 st.title("Stelo Vienas Armor Generator")
 
 # Dropdown selections
-base_layer = st.selectbox("Base Layer", ["Gambeson", "Padded Tunic", "Chainmail", "Leather Tunic"])
-under_armor = st.selectbox("Under Armor", ["None", "Chainmail", "Brigandine", "Scale Armor"])
-over_armor = st.selectbox("Over Armor", ["None", "Breastplate", "Cuirass", "Plated Vest"])
-helmet_type = st.selectbox("Helmet Type", ["None", "Great Helm", "Sallet", "Barbute", "Bascinet"])
-pauldrons = st.selectbox("Pauldrons", ["None", "Standard Plate", "Layered Spaulders", "Spiked Pauldrons"])
-material = st.selectbox("Material", ["Steel", "Iron", "Bronze", "Mithril", "Obsidian", "Leather"])
-motif = st.selectbox("Motif & Engraving", ["None", "Runic Symbols", "Heraldic Crest", "Filigree", "Gothic Marks"])
+preset = st.selectbox("Armor Pre-sets", ["None", "Roman Legionary", "Greek Hoplite", "Medieval Knight", "Samurai", "Viking Warrior"])
+base_layer = st.selectbox("Base Layer", ["Gambeson", "Padded Tunic", "Chainmail", "Leather Tunic", "Linen Robe"])
+under_armor = st.selectbox("Under Armor", ["None", "Chainmail", "Brigandine", "Scale Armor", "Lamellar Armor"])
+over_armor = st.selectbox("Over Armor", ["None", "Breastplate", "Cuirass", "Plated Vest", "Segmented Armor"])
+helmet_type = st.selectbox("Helmet Type", ["None", "Great Helm", "Sallet", "Barbute", "Bascinet", "Corinthian Helm", "Kabuto"])
+pauldrons = st.selectbox("Pauldrons", ["None", "Standard Plate", "Layered Spaulders", "Spiked Pauldrons", "Fur-Trimmed Pauldrons"])
+material = st.selectbox("Material", ["Steel", "Iron", "Bronze", "Mithril", "Obsidian", "Leather", "Gold", "Silver"])
+motif = st.selectbox("Motif & Engraving", ["None", "Runic Symbols", "Heraldic Crest", "Filigree", "Gothic Marks", "Warrior's Marks"])
 
 # Dynamic prompt generation
 def generate_prompt():
@@ -31,6 +32,8 @@ def generate_prompt():
     if pauldrons != "None":
         prompt += f" Their shoulders are protected by {pauldrons}."
     prompt += f" The armor is made of {material} with {motif} engravings."
+    if preset != "None":
+        prompt = f"A {preset} warrior dressed in traditional armor, consisting of {base_layer}, {under_armor}, {over_armor}, and {helmet_type}, crafted from {material} with {motif} engravings."
     return prompt
 
 prompt_text = generate_prompt()
@@ -39,6 +42,7 @@ st.text_area("AI Image Prompt", prompt_text, height=150)
 # Save functionality
 if st.button("Save Configuration"):
     save_configuration({
+        "Preset": preset,
         "Base Layer": base_layer,
         "Under Armor": under_armor,
         "Over Armor": over_armor,
@@ -59,4 +63,5 @@ if st.button("Load Previous Configuration"):
         st.warning("No previous configuration found.")
 
 # PNG Image Placeholder (To be reintroduced later)
-st.image("armor_preview.png", caption="Armor Preview", use_column_width=True)
+st.image("armor_preview.png", caption="Armor Preview", use_container_width=True)
+
