@@ -17,7 +17,7 @@ armor_options = {
     "Engraving": ["None", "Runes", "Heraldic Crest", "Floral Motif", "Battle Scars"],
 }
 
-armor_materials = ["Steel", "Bronze", "Leather", "Damascus Steel", "Iron"]
+armor_materials = ["Steel", "Bronze", "Leather", "Silk", "Linen", "Velevet", "Damascus Steel", "Iron"]
 
 # ========== Armor Selection with Color Picker ==========
 user_armor = {}
