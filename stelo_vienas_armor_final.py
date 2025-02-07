@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+import os
 
 def save_configuration(config):
     with open("armor_config.json", "w") as file:
@@ -63,5 +64,10 @@ if st.button("Load Previous Configuration"):
         st.warning("No previous configuration found.")
 
 # PNG Image Placeholder (To be reintroduced later)
-st.image("armor_preview.png", caption="Armor Preview", use_container_width=True)
+image_path = "armor_preview.png"
+if os.path.exists(image_path):
+    st.image(image_path, caption="Armor Preview", use_container_width=True)
+else:
+    st.warning("Image preview not available. Please ensure 'armor_preview.png' is in the correct directory.")
+
 
