@@ -1,91 +1,62 @@
 import streamlit as st
 import json
-import random
 
-# ========== Initialize App ==========
-st.title("⚔️ Stelo Vienas Armor Generator - Final Version ⚔️")
-st.sidebar.header("Customize Your Armor")
+def save_configuration(config):
+    with open("armor_config.json", "w") as file:
+        json.dump(config, file)
 
-# ========== Armor Selection ==========
-armor_options = {
-    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)"],
-    "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor"],
-    "Pauldrons": ["None", "Pteruges (Roman)", "Winged Pauldrons", "Spiked Pauldrons"],
-    "Gauntlets": ["None", "Finger Gauntlets", "Splinted Gauntlets", "Steel Claws"],
-    "Greaves": ["None", "Leather Greaves", "Steel Greaves", "Bronze Shin Guards"],
-    "Cape": ["None", "Tattered Cloak", "Fur Mantle", "Battle Cape"],
-    "Engraving": ["None", "Runes", "Heraldic Crest", "Floral Motif"],
-}
+def load_configuration():
+    try:
+        with open("armor_config.json", "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
 
-armor_materials = ["Steel", "Bronze", "Leather", "Damascus Steel", "Iron"]
+st.title("Stelo Vienas Armor Generator")
 
-# Store user selections
-user_armor = {}
-for category, choices in armor_options.items():
-    material = st.sidebar.selectbox(f"{category} Material", armor_materials, key=f"{category}_material")
-    armor_choice = st.sidebar.selectbox(category, choices, key=f"{category}_choice")
-    user_armor[category] = {"Material": material, "Type": armor_choice}
+# Dropdown selections
+base_layer = st.selectbox("Base Layer", ["Gambeson", "Padded Tunic", "Chainmail", "Leather Tunic"])
+under_armor = st.selectbox("Under Armor", ["None", "Chainmail", "Brigandine", "Scale Armor"])
+over_armor = st.selectbox("Over Armor", ["None", "Breastplate", "Cuirass", "Plated Vest"])
+helmet_type = st.selectbox("Helmet Type", ["None", "Great Helm", "Sallet", "Barbute", "Bascinet"])
+pauldrons = st.selectbox("Pauldrons", ["None", "Standard Plate", "Layered Spaulders", "Spiked Pauldrons"])
+material = st.selectbox("Material", ["Steel", "Iron", "Bronze", "Mithril", "Obsidian", "Leather"])
+motif = st.selectbox("Motif & Engraving", ["None", "Runic Symbols", "Heraldic Crest", "Filigree", "Gothic Marks"])
 
-# ========== Toggle Switches ==========
-st.sidebar.subheader("Enable/Disable Components")
-toggle_armor = {}
-for category in armor_options.keys():
-    toggle_armor[category] = st.sidebar.checkbox(f"Include {category}", value=True)
+# Dynamic prompt generation
+def generate_prompt():
+    prompt = f"A warrior wearing {base_layer} with {under_armor} underneath and {over_armor} as outer protection."
+    if helmet_type != "None":
+        prompt += f" They wear a {helmet_type}."
+    if pauldrons != "None":
+        prompt += f" Their shoulders are protected by {pauldrons}."
+    prompt += f" The armor is made of {material} with {motif} engravings."
+    return prompt
 
-# ========== Static Armor Reference Panel ==========
-st.sidebar.subheader("🛡️ Armor Reference")
-st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_column_width=True)
+prompt_text = generate_prompt()
+st.text_area("AI Image Prompt", prompt_text, height=150)
 
-# ========== AI Prompt Generator ==========
-st.subheader("📝 AI-Powered Armor Description")
-ai_prompt = "A warrior clad in "
+# Save functionality
+if st.button("Save Configuration"):
+    save_configuration({
+        "Base Layer": base_layer,
+        "Under Armor": under_armor,
+        "Over Armor": over_armor,
+        "Helmet Type": helmet_type,
+        "Pauldrons": pauldrons,
+        "Material": material,
+        "Motif": motif
+    })
+    st.success("Configuration saved!")
 
-for category, details in user_armor.items():
-    if toggle_armor[category] and details["Type"] != "None":
-        ai_prompt += f"{details['Material'].lower()} {details['Type'].lower()} {category.lower()}, "
+# Load previous configuration
+if st.button("Load Previous Configuration"):
+    loaded_config = load_configuration()
+    if loaded_config:
+        st.write("Previous Configuration:")
+        st.json(loaded_config)
+    else:
+        st.warning("No previous configuration found.")
 
-ai_prompt = ai_prompt.rstrip(", ") + "."
-st.text_area("Copy & Paste AI Prompt:", ai_prompt)
-
-
-# ========== Randomization Button ==========
-if st.sidebar.button("🎲 Randomize Armor"):
-    for category in armor_options.keys():
-        user_armor[category]["Type"] = random.choice(armor_options[category])
-        user_armor[category]["Material"] = random.choice(armor_materials)
-
-# ========== Static Armor Reference Panel ==========
-st.sidebar.subheader("🛡️ Armor Reference")
-st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_column_width=True)
-
-# ========== AI Prompt Generator ==========
-st.subheader("📝 AI-Powered Armor Description")
-ai_prompt = "A warrior clad in "
-
-for category, details in user_armor.items():
-    if toggle_armor[category] and details["Type"] != "None":
-        ai_prompt += f"{details['Material'].lower()} {details['Type'].lower()} {category.lower()}, "
-
-ai_prompt = ai_prompt.rstrip(", ") + "."
-st.text_area("Copy & Paste AI Prompt:", ai_prompt)
-
-# ========== Save & Load Feature ==========
-st.sidebar.subheader("💾 Save & Load Configurations")
-
-# Save armor configuration
-armor_name = st.sidebar.text_input("Save as:", "My_Armor_Set")
-if st.sidebar.button("💾 Save Armor"):
-    with open(f"{armor_name}.json", "w") as file:
-        json.dump(user_armor, file)
-    st.sidebar.success(f"Saved: {armor_name}.json")
-
-# Load armor configuration
-load_armor = st.sidebar.file_uploader("📂 Load Armor Configuration", type=["json"])
-if load_armor:
-    user_armor = json.load(load_armor)
-    st.sidebar.success("Loaded successfully!")
-
-# ========== Final Display ==========
-st.subheader("🛡️ Final Armor Configuration")
-st.json(user_armor)
-
+# PNG Image Placeholder (To be reintroduced later)
+st.image("armor_preview.png", caption="Armor Preview", use_column_width=True)
