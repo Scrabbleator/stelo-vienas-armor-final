@@ -32,6 +32,22 @@ toggle_armor = {}
 for category in armor_options.keys():
     toggle_armor[category] = st.sidebar.checkbox(f"Include {category}", value=True)
 
+# ========== Static Armor Reference Panel ==========
+st.sidebar.subheader("🛡️ Armor Reference")
+st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_column_width=True)
+
+# ========== AI Prompt Generator ==========
+st.subheader("📝 AI-Powered Armor Description")
+ai_prompt = "A warrior clad in "
+
+for category, details in user_armor.items():
+    if toggle_armor[category] and details["Type"] != "None":
+        ai_prompt += f"{details['Material'].lower()} {details['Type'].lower()} {category.lower()}, "
+
+ai_prompt = ai_prompt.rstrip(", ") + "."
+st.text_area("Copy & Paste AI Prompt:", ai_prompt)
+
+
 # ========== Randomization Button ==========
 if st.sidebar.button("🎲 Randomize Armor"):
     for category in armor_options.keys():
