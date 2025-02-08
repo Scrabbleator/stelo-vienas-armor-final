@@ -45,13 +45,21 @@ st.sidebar.subheader("Select Base Armor Color")
 base_color = st.sidebar.color_picker("Pick a color:", "#808080")
 comp_color, triadic1, triadic2 = generate_color_combinations(base_color)
 
-st.sidebar.write("Complementary Color:", comp_color)
-st.sidebar.write("Triadic Colors:", triadic1, "&", triadic2)
+use_color_theory = st.sidebar.checkbox("Use Color Theory Suggestions", value=False)
+if use_color_theory:
+    st.sidebar.write("Complementary Color:", comp_color)
+    st.sidebar.write("Triadic Colors:", triadic1, "&", triadic2)
 
 for category, choices in armor_options.items():
     armor_choice = st.sidebar.selectbox(category, choices, key=f"{category}_choice")
-    armor_color = st.sidebar.color_picker(f"{category} Color", base_color, key=f"{category}_color")
+    armor_color = st.sidebar.color_picker(f"{category} Color", base_color, key=f"{category}_color") if not use_color_theory else comp_color
     user_armor[category] = {"Type": armor_choice, "Color": armor_color}
+
+# ========== Randomization Button ==========
+if st.sidebar.button("🎲 Randomize Armor"):
+    for category in armor_options.keys():
+        user_armor[category]["Type"] = random.choice(armor_options[category])
+        user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
@@ -77,4 +85,3 @@ if load_armor:
 
 st.subheader("🛡️ Final Armor Configuration")
 st.json(user_armor)
-
