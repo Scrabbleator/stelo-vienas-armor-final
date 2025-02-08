@@ -8,7 +8,7 @@ st.sidebar.header("Customize Your Armor")
 
 # ========== Expanded Armor Options ==========
 armor_options = {
-    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm","Sallet"],
+    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet"],
     "Base Layer": ["None", "Gambeson", "Padded Gambeson", "Chainmail", "Leather Jerkin"],
     "Over Layer":  ["None", "Surcoat", "Tabard"],
     "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor", "Brigandine", "Lamellar Armor"],
@@ -72,7 +72,7 @@ if st.sidebar.button("💾 Save Armor"):
     st.sidebar.success(f"Saved: {armor_name}.json")
 
 # Load armor configuration
-load_armor = st.sidebar.file_uploader("📂 Load Armor Configuration", type=["json"])
+load_armor = st.sidebar.file_uploader("💒 Load Armor Configuration", type=["json"])
 if load_armor:
     user_armor = json.load(load_armor)
     st.sidebar.success("Loaded successfully!")
