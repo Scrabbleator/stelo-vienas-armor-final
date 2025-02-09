@@ -6,9 +6,21 @@ import random
 st.title("⚔️ Stelo Vienas Armor Generator - Enhanced Version ⚔️")
 st.sidebar.header("Customize Your Armor")
 
+# ========== Faction-Based Presets ==========
+st.sidebar.subheader("🏰 Select Faction Preset")
+factions = {
+    "None": {},
+    "Arkellion": {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak"},
+    "Etheresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle"},
+    "Caracian": {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak"},
+    "Vontharian": {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape"},
+    "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None"}
+}
+selected_faction = st.sidebar.selectbox("Faction Preset", list(factions.keys()), key="faction_preset")
+
 # ========== Expanded Armor Options ==========
 armor_options = {
-    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet"],
+    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet", "Bascinet", "Morion", "Kettle Helm", "Horned Helm", "Winged Helm"],
     "Base Layer": ["None", "Gambeson", "Padded Gambeson", "Chainmail", "Leather Jerkin"],
     "Over Layer":  ["None", "Surcoat", "Tabard", "Hooded Cloak"],
     "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor", "Brigandine", "Lamellar Armor"],
@@ -17,20 +29,24 @@ armor_options = {
     "Greaves": ["None", "Leather Greaves", "Steel Greaves", "Bronze Shin Guards", "Plated Tassets", "Dragonbone Greaves"],
     "Cape": ["None", "Tattered Cloak", "Fur Mantle", "Battle Cape", "Royal Cloak"],
     "Engraving": ["None", "Runes", "Heraldic Crest", "Floral Motif", "Battle Scars"],
+    "Armor Condition": ["Pristine", "Battle-Worn", "Damaged"]
 }
 
 armor_materials = ["Steel", "Bronze", "Leather", "Silk", "Linen", "Velvet", "Damascus Steel", "Iron"]
 
-# ========== Armor Selection with Color Picker ==========
+# ========== Armor Selection with Color Picker and Layering ==========
 user_armor = {}
 for category, choices in armor_options.items():
+    default_choice = factions[selected_faction].get(category, "None")
     material = st.sidebar.selectbox(f"{category} Material", armor_materials, key=f"{category}_material")
-    armor_choice = st.sidebar.selectbox(category, choices, key=f"{category}_choice")
+    armor_choice = st.sidebar.selectbox(category, choices, index=choices.index(default_choice), key=f"{category}_choice")
     armor_color = st.sidebar.color_picker(f"{category} Color", "#808080", key=f"{category}_color")
+    layer_position = st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
     user_armor[category] = {
         "Material": material,
         "Type": armor_choice,
-        "Color": armor_color
+        "Color": armor_color,
+        "Layer": layer_position
     }
 
 # ========== Armor Reference Image ==========
@@ -43,6 +59,7 @@ if st.sidebar.button("🎲 Randomize Armor"):
         user_armor[category]["Type"] = random.choice(armor_options[category])
         user_armor[category]["Material"] = random.choice(armor_materials)
         user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        user_armor[category]["Layer"] = random.choice(["Over", "Under"])
 
 # ========== Save & Load Feature ==========
 st.sidebar.subheader("💾 Save & Load Configurations")
@@ -62,7 +79,7 @@ st.subheader("📝 AI-Powered Armor Description")
 ai_prompt = "A warrior clad in "
 for category, details in user_armor.items():
     if details["Type"] != "None":
-        ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()}, "
+        ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
 ai_prompt = ai_prompt.rstrip(", ") + "."
 st.text_area("Copy & Paste AI Prompt:", ai_prompt)
 
