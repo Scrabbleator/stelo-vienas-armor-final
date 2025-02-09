@@ -33,11 +33,10 @@ armor_options = {
     "Armor Condition": ["Pristine", "Battle-Worn", "Damaged"]
 }
 
-# ========== Material Distinctions ==========
+# ========== Material Categories ==========
 metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Adamantine"]
-cloth_materials = ["Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
-leather_materials = ["Tanned Leather", "Hardened Leather", "Dragonhide"]
-all_materials = metal_materials + cloth_materials + leather_materials
+cloth_materials = ["None", "Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
+leather_materials = ["None", "Tanned Leather", "Hardened Leather", "Dragonhide"]
 
 # ========== Armor Reference Image ==========
 st.sidebar.subheader("🛡️ Armor Reference")
@@ -47,7 +46,11 @@ st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", u
 user_armor = {}
 for category, choices in armor_options.items():
     default_choice = factions[selected_faction].get(category, "None")
-    material = st.sidebar.selectbox(f"{category} Material", all_materials, key=f"{category}_material")
+    
+    if "Leather" in category or "Cloth" in category:
+        material = st.sidebar.selectbox(f"{category} Material", cloth_materials + leather_materials, key=f"{category}_material")
+    else:
+        material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
     
     if default_choice in choices:
         default_index = choices.index(default_choice)
@@ -70,6 +73,14 @@ for category, choices in armor_options.items():
         "Color": color,
         "Layer": layer_position
     }
+
+# ========== Randomization Button ==========
+if st.sidebar.button("🎲 Randomize Armor"):
+    for category in armor_options.keys():
+        user_armor[category]["Type"] = random.choice(armor_options[category])
+        user_armor[category]["Material"] = random.choice(metal_materials + cloth_materials + leather_materials)
+        user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        user_armor[category]["Layer"] = random.choice(["Over", "Under"])
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
