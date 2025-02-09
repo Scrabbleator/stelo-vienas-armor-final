@@ -10,7 +10,7 @@ st.sidebar.header("Customize Your Armor")
 armor_options = {
     "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet"],
     "Base Layer": ["None", "Gambeson", "Padded Gambeson", "Chainmail", "Leather Jerkin"],
-    "Over Layer":  ["None", "Surcoat", "Tabard"],
+    "Over Layer":  ["None", "Surcoat", "Tabard", "Hooded Cloak"],
     "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor", "Brigandine", "Lamellar Armor"],
     "Pauldrons": ["None", "Pteruges (Roman)", "Winged Pauldrons", "Spiked Pauldrons", "Fluted Pauldrons", "Dragon-scale Pauldrons"],
     "Gauntlets": ["None", "Finger Gauntlets", "Splinted Gauntlets", "Steel Claws", "Chainmail Mittens", "Demon Claws"],
@@ -32,6 +32,10 @@ for category, choices in armor_options.items():
         "Type": armor_choice,
         "Color": armor_color
     }
+
+# ========== Armor Reference Image ==========
+st.sidebar.subheader("🛡️ Armor Reference")
+st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_container_width=True)
 
 # ========== Randomization Button ==========
 if st.sidebar.button("🎲 Randomize Armor"):
