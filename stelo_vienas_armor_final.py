@@ -46,20 +46,20 @@ st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", u
 user_armor = {}
 for category, choices in armor_options.items():
     default_choice = factions[selected_faction].get(category, "None")
+    armor_choice = st.sidebar.selectbox(category, choices, key=f"{category}_choice")
     
-    if category in ["Base Layer", "Over Layer", "Cape"]:
+    # Assign material options dynamically based on selection
+    if category == "Base Layer":
+        if armor_choice in ["Chainmail"]:
+            material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
+        else:
+            material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
+    elif category in ["Over Layer", "Cape"]:
         material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
     elif category in ["Greaves", "Gauntlets"]:
         material = st.sidebar.selectbox(f"{category} Material", leather_materials, key=f"{category}_material")
     else:
         material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
-    
-    if default_choice in choices:
-        default_index = choices.index(default_choice)
-    else:
-        default_index = 0
-    
-    armor_choice = st.sidebar.selectbox(category, choices, index=default_index, key=f"{category}_choice")
     
     # Automatically assign colors based on material type
     if material in metal_materials:
