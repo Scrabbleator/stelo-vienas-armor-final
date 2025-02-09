@@ -94,6 +94,4 @@ for category, details in user_armor.items():
     if details["Type"] != "None":
         ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
 ai_prompt = ai_prompt.rstrip(", ") + "."
-st.text_area("Copy & Paste AI Prompt:",
-::contentReference[oaicite:0]{index=0}
- 
+st.text_area("Copy & Paste AI Prompt:", ai_prompt)
