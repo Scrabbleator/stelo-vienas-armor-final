@@ -35,8 +35,8 @@ armor_options = {
 
 # ========== Material Categories ==========
 metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Adamantine"]
-cloth_materials = ["None", "Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
-leather_materials = ["None", "Tanned Leather", "Hardened Leather", "Dragonhide"]
+cloth_materials = ["Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
+leather_materials = ["Tanned Leather", "Hardened Leather", "Dragonhide"]
 
 # ========== Armor Reference Image ==========
 st.sidebar.subheader("🛡️ Armor Reference")
@@ -47,8 +47,10 @@ user_armor = {}
 for category, choices in armor_options.items():
     default_choice = factions[selected_faction].get(category, "None")
     
-    if "Leather" in category or "Cloth" in category:
-        material = st.sidebar.selectbox(f"{category} Material", cloth_materials + leather_materials, key=f"{category}_material")
+    if category in ["Base Layer", "Over Layer", "Cape"]:
+        material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
+    elif category in ["Greaves", "Gauntlets"]:
+        material = st.sidebar.selectbox(f"{category} Material", leather_materials, key=f"{category}_material")
     else:
         material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
     
