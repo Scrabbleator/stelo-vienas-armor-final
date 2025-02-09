@@ -50,14 +50,17 @@ for category, choices in armor_options.items():
     
     # Assign material options dynamically based on selection
     if category == "Base Layer":
-        if armor_choice in ["Chainmail"]:
+        if armor_choice == "Chainmail":
             material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
         else:
             material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
+    elif category in ["Greaves", "Gauntlets"]:
+        if armor_choice in ["Steel Greaves", "Bronze Shin Guards", "Plated Tassets"]:
+            material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
+        else:
+            material = st.sidebar.selectbox(f"{category} Material", leather_materials, key=f"{category}_material")
     elif category in ["Over Layer", "Cape"]:
         material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
-    elif category in ["Greaves", "Gauntlets"]:
-        material = st.sidebar.selectbox(f"{category} Material", leather_materials, key=f"{category}_material")
     else:
         material = st.sidebar.selectbox(f"{category} Material", metal_materials, key=f"{category}_material")
     
