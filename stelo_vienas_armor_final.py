@@ -38,6 +38,8 @@ armor_materials = ["Steel", "Bronze", "Leather", "Silk", "Linen", "Velvet", "Dam
 user_armor = {}
 for category, choices in armor_options.items():
     default_choice = factions[selected_faction].get(category, "None")
+    if default_choice not in choices:
+        default_choice = "None"
     material = st.sidebar.selectbox(f"{category} Material", armor_materials, key=f"{category}_material")
     armor_choice = st.sidebar.selectbox(category, choices, index=choices.index(default_choice), key=f"{category}_choice")
     armor_color = st.sidebar.color_picker(f"{category} Color", "#808080", key=f"{category}_color")
