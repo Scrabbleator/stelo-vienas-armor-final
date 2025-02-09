@@ -34,26 +34,32 @@ armor_options = {
 
 armor_materials = ["Steel", "Bronze", "Leather", "Silk", "Linen", "Velvet", "Damascus Steel", "Iron"]
 
+# ========== Armor Reference Image ==========
+st.sidebar.subheader("🛡️ Armor Reference")
+st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_container_width=True)
+
 # ========== Armor Selection with Color Picker and Layering ==========
 user_armor = {}
 for category, choices in armor_options.items():
     default_choice = factions[selected_faction].get(category, "None")
-    if default_choice not in choices:
-        default_choice = "None"
     material = st.sidebar.selectbox(f"{category} Material", armor_materials, key=f"{category}_material")
-    armor_choice = st.sidebar.selectbox(category, choices, index=choices.index(default_choice), key=f"{category}_choice")
+    
+    # Check if default_choice exists in choices; if not, set index to 0
+    if default_choice in choices:
+        default_index = choices.index(default_choice)
+    else:
+        default_index = 0
+    
+    armor_choice = st.sidebar.selectbox(category, choices, index=default_index, key=f"{category}_choice")
     armor_color = st.sidebar.color_picker(f"{category} Color", "#808080", key=f"{category}_color")
     layer_position = st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
+    
     user_armor[category] = {
         "Material": material,
         "Type": armor_choice,
         "Color": armor_color,
         "Layer": layer_position
     }
-
-# ========== Armor Reference Image ==========
-st.sidebar.subheader("🛡️ Armor Reference")
-st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_container_width=True)
 
 # ========== Randomization Button ==========
 if st.sidebar.button("🎲 Randomize Armor"):
@@ -72,9 +78,14 @@ if st.sidebar.button("💾 Save Armor"):
 
 load_armor = st.sidebar.file_uploader("💒 Load Armor Configuration", type=["json"])
 if load_armor is not None:
-    loaded_data = json.load(load_armor)
-    user_armor.update(loaded_data)
-    st.sidebar.success("Loaded successfully!")
+    try:
+        loaded_data = json.load(load_armor)
+        user_armor.update(loaded_data)
+        st.sidebar.success("Loaded successfully!")
+    except UnicodeDecodeError:
+        st.sidebar.error("Failed to decode the file. Please ensure it's encoded in UTF-8.")
+    except json.JSONDecodeError:
+        st.sidebar.error("Failed to parse JSON. Please ensure the file is a valid JSON.")
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
@@ -83,8 +94,6 @@ for category, details in user_armor.items():
     if details["Type"] != "None":
         ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
 ai_prompt = ai_prompt.rstrip(", ") + "."
-st.text_area("Copy & Paste AI Prompt:", ai_prompt)
-
-# ========== Final Display ==========
-st.subheader("🛡️ Final Armor Configuration")
-st.json(user_armor)
+st.text_area("Copy & Paste AI Prompt:",
+::contentReference[oaicite:0]{index=0}
+ 
