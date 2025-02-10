@@ -25,7 +25,7 @@ armor_options = {
     "Over Layer":  ["None", "Surcoat", "Tabard", "Hooded Cloak"],
     "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor", "Brigandine", "Lamellar Armor"],
     "Pauldrons": ["None", "Pteruges (Roman)", "Winged Pauldrons", "Spiked Pauldrons", "Fluted Pauldrons", "Dragon-scale Pauldrons"],
-    "Gauntlets": ["None", "Finger Gauntlets", "Splinted Gauntlets", "Steel Claws", "Chainmail Mittens", "Demon Claws"],
+    "Gauntlets": ["None", "Finger Gauntlets", "Splinted Gauntlets", "Steel Claws", "Chainmail Mittens", "Demon Claws", "Plate Gauntlets"],
     "Greaves": ["None", "Leather Greaves", "Steel Greaves", "Bronze Shin Guards", "Plated Tassets", "Dragonbone Greaves"],
     "Cape": ["None", "Tattered Cloak", "Fur Mantle", "Battle Cape", "Royal Cloak"],
     "Weapon": ["None", "Longsword", "Rapier", "Warhammer", "Battle Axe", "Scimitar", "Spear", "Greatsword", "Mace", "Dagger", "Crossbow"],
@@ -34,7 +34,7 @@ armor_options = {
 }
 
 # ========== Material Categories ==========
-metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Adamantine"]
+metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Corinthian Steel", "Adamantine"]
 cloth_materials = ["Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
 leather_materials = ["Tanned Leather", "Hardened Leather", "Dragonhide"]
 
@@ -51,8 +51,10 @@ for category, choices in armor_options.items():
     # Assign material options dynamically based on selection
     if category == "Base Layer":
         material = st.sidebar.selectbox(f"{category} Material", metal_materials if armor_choice == "Chainmail" else cloth_materials, key=f"{category}_material")
-    elif category in ["Greaves", "Gauntlets"]:
+    elif category == "Greaves":
         material = st.sidebar.selectbox(f"{category} Material", metal_materials if armor_choice in ["Steel Greaves", "Bronze Shin Guards", "Plated Tassets"] else leather_materials, key=f"{category}_material")
+    elif category == "Gauntlets":
+        material = st.sidebar.selectbox(f"{category} Material", metal_materials if armor_choice in ["Steel Claws", "Plate Gauntlets"] else leather_materials, key=f"{category}_material")
     elif category in ["Over Layer", "Cape"]:
         material = st.sidebar.selectbox(f"{category} Material", cloth_materials, key=f"{category}_material")
     else:
