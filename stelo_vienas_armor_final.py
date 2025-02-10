@@ -42,6 +42,9 @@ leather_materials = ["Tanned Leather", "Hardened Leather", "Dragonhide"]
 st.sidebar.subheader("🛡️ Armor Reference")
 st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", use_container_width=True)
 
+# ========== Initialize user_armor Dictionary ==========
+user_armor = {category: {"Type": "None", "Material": "None", "Color": "#808080", "Layer": "Over"} for category in armor_options.keys()}
+
 # ========== Save & Load System with Download ==========
 st.sidebar.subheader("💾 Save & Load Configurations")
 armor_json = json.dumps(user_armor, indent=4)
