@@ -11,7 +11,7 @@ st.sidebar.subheader("🏰 Select Faction Preset")
 factions = {
     "None": {},
     "Arkellion": {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
-    "Etheresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
+    "Ethresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
     "Caracian": {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
     "Vontharian": {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
     "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"}
@@ -34,7 +34,7 @@ armor_options = {
 }
 
 # ========== Material Categories ==========
-metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Corinthian Steel", "Adamantine"]
+metal_materials = ["Steel", "Bronze", "Iron", "Damascus Steel", "Mithril", "Gold", "Silver", "Adamantine"]
 cloth_materials = ["Linen", "Wool", "Silk", "Velvet", "Cotton", "Dyed Cloth"]
 leather_materials = ["Tanned Leather", "Hardened Leather", "Dragonhide"]
 
@@ -75,22 +75,21 @@ for category, choices in armor_options.items():
         "Layer": layer_position
     }
 
-# ========== Randomization Button ==========
-if st.sidebar.button("🎲 Randomize Armor"):
-    for category in armor_options.keys():
-        user_armor[category]["Type"] = random.choice(armor_options[category])
-        user_armor[category]["Material"] = random.choice(metal_materials + cloth_materials + leather_materials)
-        user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-        user_armor[category]["Layer"] = random.choice(["Over", "Under"])
+# ========== Save & Load System with Download ==========
+st.sidebar.subheader("💾 Save & Load Configurations")
+armor_json = json.dumps(user_armor, indent=4)
 
-# ========== AI Prompt Generator ==========
-st.subheader("📝 AI-Powered Armor Description")
-ai_prompt = "A warrior clad in "
-for category, details in user_armor.items():
-    if details["Type"] != "None":
-        ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
-ai_prompt = ai_prompt.rstrip(", ") + "."
-st.text_area("Copy & Paste AI Prompt:", ai_prompt)
+st.sidebar.download_button(
+    label="💾 Download Armor Config",
+    data=armor_json,
+    file_name="armor_configuration.json",
+    mime="application/json"
+)
+
+load_armor = st.sidebar.file_uploader("📂 Load Armor Configuration", type=["json"])
+if load_armor:
+    user_armor = json.load(load_armor)
+    st.sidebar.success("Loaded configuration successfully!")
 
 # ========== Final Display ==========
 st.subheader("🛡️ Final Armor Configuration")
