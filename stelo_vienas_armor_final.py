@@ -11,7 +11,7 @@ st.sidebar.subheader("🏰 Select Faction Preset")
 factions = {
     "None": {},
     "Arkellion": {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
-    "Ethresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
+    "Etheresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
     "Caracian": {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
     "Vontharian": {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
     "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"}
@@ -74,6 +74,14 @@ for category, choices in armor_options.items():
         "Color": color,
         "Layer": layer_position
     }
+
+# ========== Randomization Button ==========
+if st.sidebar.button("🎲 Randomize Armor"):
+    for category in armor_options.keys():
+        user_armor[category]["Type"] = random.choice(armor_options[category])
+        user_armor[category]["Material"] = random.choice(metal_materials + cloth_materials + leather_materials)
+        user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        user_armor[category]["Layer"] = random.choice(["Over", "Under"])
 
 # ========== Save & Load System with Download ==========
 st.sidebar.subheader("💾 Save & Load Configurations")
