@@ -52,6 +52,39 @@ for category, choices in armor_options.items():
         "Layer": st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
     }
 
+# ========== AI Prompt Generator ==========
+st.subheader("📝 AI-Powered Armor Description")
+ai_prompt = "A warrior clad in "
+for category, details in user_armor.items():
+    if details["Type"] != "None":
+        ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
+ai_prompt = ai_prompt.rstrip(", ") + "."
+st.text_area("Copy & Paste AI Prompt:", ai_prompt)
+
+# ========== Save & Load System with Download ==========
+st.sidebar.subheader("💾 Save & Load Configurations")
+armor_json = json.dumps(user_armor, indent=4)
+
+st.sidebar.download_button(
+    label="💾 Download Armor Config",
+    data=armor_json,
+    file_name="armor_configuration.json",
+    mime="application/json"
+)
+
+load_armor = st.sidebar.file_uploader("📂 Load Armor Configuration", type=["json"])
+if load_armor:
+    user_armor = json.load(load_armor)
+    st.sidebar.success("Loaded configuration successfully!")
+
+# ========== Randomization Button ==========
+if st.sidebar.button("🎲 Randomize Armor"):
+    for category in armor_options.keys():
+        user_armor[category]["Type"] = random.choice(armor_options[category])
+        user_armor[category]["Material"] = random.choice(metal_materials + cloth_materials + leather_materials)
+        user_armor[category]["Color"] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        user_armor[category]["Layer"] = random.choice(["Over", "Under"])
+
 # ========== Final Display ==========
 st.subheader("🛡️ Final Armor Configuration")
 st.json(user_armor)
