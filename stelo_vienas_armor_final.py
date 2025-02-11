@@ -11,12 +11,29 @@ st.sidebar.subheader("🛡️ Select Gender")
 gender = st.sidebar.radio("Character Gender", ["Male", "Female"], key="gender_selection")
 
 # ========== Initialize user_armor Dictionary ==========
-user_armor = {
-    "Helmet": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
-    "Chestplate": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
-    "Cape": {"Type": "None", "Material": "Cloth", "Color": "#808080", "Layer": "Over"},
-    "Weapon": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
+armor_options = {
+    "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet", "Bascinet", "Morion", "Kettle Helm", "Horned Helm", "Winged Helm"],
+    "Base Layer": ["None", "Gambeson", "Padded Gambeson", "Chainmail", "Leather Jerkin"],
+    "Over Layer":  ["None", "Surcoat", "Tabard", "Hooded Cloak"],
+    "Chestplate": ["None", "Lorica Segmentata", "Scale Armor", "Kavacha (South Indian)", "Plate Armor", "Brigandine", "Lamellar Armor"],
+    "Pauldrons": ["None", "Pteruges (Roman)", "Winged Pauldrons", "Spiked Pauldrons", "Fluted Pauldrons", "Dragon-scale Pauldrons"],
+    "Metal Gauntlets": ["None", "Steel Claws", "Plate Gauntlets", "Splinted Gauntlets"],
+    "Leather/Cloth Gauntlets": ["None", "Finger Gauntlets", "Chainmail Mittens", "Demon Claws"],
+    "Greaves": ["None", "Leather Greaves", "Steel Greaves", "Bronze Shin Guards", "Plated Tassets", "Dragonbone Greaves"],
+    "Cape": ["None", "Tattered Cloak", "Fur Mantle", "Battle Cape", "Royal Cloak"],
+    "Weapon": ["None", "Longsword", "Rapier", "Warhammer", "Battle Axe", "Scimitar", "Spear", "Greatsword", "Mace", "Dagger", "Crossbow"],
+    "Engraving": ["None", "Runes", "Heraldic Crest", "Floral Motif", "Battle Scars"],
+    "Armor Condition": ["Pristine", "Battle-Worn", "Damaged"]
 }
+
+user_armor = {}
+for category, choices in armor_options.items():
+    user_armor[category] = {
+        "Type": st.sidebar.selectbox(f"{category}", choices, key=f"{category}_choice"),
+        "Material": st.sidebar.selectbox(f"{category} Material", ["Steel", "Bronze", "Iron", "Leather", "Cloth"], key=f"{category}_material"),
+        "Color": st.sidebar.color_picker(f"{category} Color", "#808080", key=f"{category}_color"),
+        "Layer": st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
+    }
 
 # ========== Faction-Based Presets ==========
 st.sidebar.subheader("🏰 Select Faction Preset")
@@ -29,24 +46,6 @@ factions = {
     "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"}
 }
 selected_faction = st.sidebar.selectbox("Faction Preset", list(factions.keys()), key="faction_preset")
-
-# ========== Pre-Generated Random Presets ==========
-st.sidebar.subheader("🎲 Random Pre-Generated Armor Sets")
-random_presets = [
-    {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
-    {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
-    {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
-    {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
-    {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"},
-    {"Helmet": "Close Helm", "Chestplate": "Lorica Segmentata", "Cape": "Tattered Cloak", "Weapon": "Greatsword"},
-    {"Helmet": "Horned Helm", "Chestplate": "Scale Armor", "Cape": "Fur Mantle", "Weapon": "Mace"}
-]
-selected_preset = st.sidebar.selectbox("Choose a Random Preset", list(range(1, 8)), key="preset_choice")
-if st.sidebar.button("🔀 Apply Random Preset"):
-    preset = random_presets[selected_preset - 1]
-    for key, value in preset.items():
-        user_armor[key]["Type"] = value
-    st.experimental_rerun()
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
