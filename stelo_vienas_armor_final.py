@@ -6,6 +6,10 @@ import random
 st.title("⚔️ Stelo Vienas Armor Generator - Enhanced Version ⚔️")
 st.sidebar.header("Customize Your Armor")
 
+# ========== Gender Selection ==========
+st.sidebar.subheader("🛡️ Select Gender")
+gender = st.sidebar.radio("Character Gender", ["Male", "Female"], key="gender_selection")
+
 # ========== Faction-Based Presets ==========
 st.sidebar.subheader("🏰 Select Faction Preset")
 factions = {
@@ -45,16 +49,21 @@ st.sidebar.image("static_armor_diagram.png", caption="Armor Layers Reference", u
 # ========== Initialize user_armor Dictionary ==========
 user_armor = {}
 for category, choices in armor_options.items():
+    material_list = (
+        metal_materials if category in ["Helmet", "Chestplate", "Pauldrons", "Gauntlets", "Greaves"] else
+        cloth_materials if category in ["Base Layer", "Over Layer", "Cape"] else
+        leather_materials
+    )
     user_armor[category] = {
         "Type": st.sidebar.selectbox(f"{category}", choices, key=f"{category}_choice"),
-        "Material": st.sidebar.selectbox(f"{category} Material", metal_materials + cloth_materials + leather_materials, key=f"{category}_material"),
+        "Material": st.sidebar.selectbox(f"{category} Material", material_list, key=f"{category}_material"),
         "Color": st.sidebar.color_picker(f"{category} Color", "#808080", key=f"{category}_color"),
         "Layer": st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
     }
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
-ai_prompt = "A warrior clad in "
+ai_prompt = f"A {gender.lower()} warrior clad in "
 for category, details in user_armor.items():
     if details["Type"] != "None":
         ai_prompt += f"{details['Color']} {details['Material'].lower()} {details['Type'].lower()} {category.lower()} ({details['Layer']}), "
