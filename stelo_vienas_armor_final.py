@@ -10,6 +10,14 @@ st.sidebar.header("Customize Your Armor")
 st.sidebar.subheader("🛡️ Select Gender")
 gender = st.sidebar.radio("Character Gender", ["Male", "Female"], key="gender_selection")
 
+# ========== Initialize user_armor Dictionary ==========
+user_armor = {
+    "Helmet": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
+    "Chestplate": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
+    "Cape": {"Type": "None", "Material": "Cloth", "Color": "#808080", "Layer": "Over"},
+    "Weapon": {"Type": "None", "Material": "Steel", "Color": "#808080", "Layer": "Over"},
+}
+
 # ========== Faction-Based Presets ==========
 st.sidebar.subheader("🏰 Select Faction Preset")
 factions = {
@@ -37,7 +45,8 @@ selected_preset = st.sidebar.selectbox("Choose a Random Preset", list(range(1, 8
 if st.sidebar.button("🔀 Apply Random Preset"):
     preset = random_presets[selected_preset - 1]
     for key, value in preset.items():
-        user_armor[key] = {"Type": value, "Material": "Steel", "Color": "#808080", "Layer": "Over"}
+        user_armor[key]["Type"] = value
+    st.experimental_rerun()
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
