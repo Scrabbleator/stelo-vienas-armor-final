@@ -35,17 +35,22 @@ for category, choices in armor_options.items():
         "Layer": st.sidebar.radio(f"Layer {category}", ["Over", "Under"], key=f"{category}_layer")
     }
 
-# ========== Faction-Based Presets ==========
-st.sidebar.subheader("🏰 Select Faction Preset")
-factions = {
-    "None": {},
-    "Arkellion": {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
-    "Etheresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
-    "Caracian": {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
-    "Vontharian": {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
-    "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"}
-}
-selected_faction = st.sidebar.selectbox("Faction Preset", list(factions.keys()), key="faction_preset")
+# ========== Pre-Generated Random Presets ==========
+st.sidebar.subheader("🎲 Random Pre-Generated Armor Sets")
+random_presets = [
+    {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
+    {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
+    {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
+    {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
+    {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"},
+    {"Helmet": "Close Helm", "Chestplate": "Lorica Segmentata", "Cape": "Tattered Cloak", "Weapon": "Greatsword"},
+    {"Helmet": "Horned Helm", "Chestplate": "Scale Armor", "Cape": "Fur Mantle", "Weapon": "Mace"}
+]
+selected_preset = st.sidebar.selectbox("Choose a Random Preset", list(range(1, 8)), key="preset_choice")
+if st.sidebar.button("🔀 Apply Random Preset"):
+    preset = random_presets[selected_preset - 1]
+    for key, value in preset.items():
+        user_armor[key]["Type"] = value
 
 # ========== AI Prompt Generator ==========
 st.subheader("📝 AI-Powered Armor Description")
