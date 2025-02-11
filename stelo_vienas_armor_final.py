@@ -10,6 +10,24 @@ st.sidebar.header("Customize Your Armor")
 st.sidebar.subheader("🛡️ Select Gender")
 gender = st.sidebar.radio("Character Gender", ["Male", "Female"], key="gender_selection")
 
+# ========== Faction-Based Presets ==========
+st.sidebar.subheader("🏰 Select Faction Preset")
+factions = {
+    "None": {},
+    "Arkellion": {"Helmet": "Great Helm", "Chestplate": "Plate Armor", "Cape": "Royal Cloak", "Weapon": "Longsword"},
+    "Etheresian": {"Helmet": "Sallet", "Chestplate": "Brigandine", "Cape": "Fur Mantle", "Weapon": "Rapier"},
+    "Caracian": {"Helmet": "Morion", "Chestplate": "Scale Armor", "Cape": "Tattered Cloak", "Weapon": "Warhammer"},
+    "Vontharian": {"Helmet": "Bascinet", "Chestplate": "Lamellar Armor", "Cape": "Battle Cape", "Weapon": "Battle Axe"},
+    "Sukhalan": {"Helmet": "Kettle Helm", "Chestplate": "Kavacha (South Indian)", "Cape": "None", "Weapon": "Scimitar"}
+}
+selected_faction = st.sidebar.selectbox("Faction Preset", list(factions.keys()), key="faction_preset")
+
+# Apply Faction Preset
+if selected_faction != "None":
+    preset = factions[selected_faction]
+    for key, value in preset.items():
+        user_armor[key]["Type"] = value
+
 # ========== Initialize user_armor Dictionary ==========
 armor_options = {
     "Helmet": ["None", "Barbute", "Armet", "Spangenhelm", "Kula (South Indian)", "Nasal Helm", "Great Helm", "Close Helm", "Sallet", "Bascinet", "Morion", "Kettle Helm", "Horned Helm", "Winged Helm"],
